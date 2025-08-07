@@ -1,0 +1,664 @@
+/* Configurações Globais e Variáveis de Cor */
+:root {
+    --cor-principal: #F8E8E8; /* Rosa Bem Claro */
+    --cor-secundaria: #FDFDFD; /* Fundo Quase Branco */
+    --cor-texto: #4E4E4E; /* Cinza Escuro para texto */
+    --cor-destaque: #D4A373; /* Dourado/Caramelo */
+    --cor-branco: #FFFFFF;
+    --fonte-titulo: 'Playfair Display', serif;
+    --fonte-corpo: 'Poppins', sans-serif;
+}
+
+/* Reset Básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--fonte-corpo);
+    background-color: var(--cor-secundaria);
+    color: var(--cor-texto);
+    line-height: 1.6;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+.container {
+    max-width: 1100px;
+    margin: auto;
+    padding: 0 20px;
+}
+
+/* Header */
+header {
+    background: var(--cor-principal);
+    padding: 1rem 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    font-family: 'Great Vibes', cursive; /* Nova fonte elegante */
+    color: var(--cor-destaque);
+    font-size: 3.2rem; /* Ajuste fino para a nova fonte */
+    font-weight: 500; /* Fontes script geralmente não usam bold */
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.15);
+    letter-spacing: 1px;
+}
+
+header nav a {
+    color: var(--cor-texto);
+    text-decoration: none;
+    margin: 0 15px;
+    font-weight: 400; /* Mais fino */
+    transition: color 0.3s ease;
+    position: relative;
+}
+
+header nav a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 1px;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--cor-destaque);
+    transition: width 0.3s ease;
+}
+
+header nav a:hover::after {
+    width: 100%;
+}
+
+header nav a:hover {
+    color: var(--cor-branco);
+}
+
+/* Seções */
+section {
+    padding: 60px 0;
+}
+
+h2 {
+    text-align: center;
+    font-family: var(--fonte-titulo);
+    font-size: 3rem;
+    color: var(--cor-destaque);
+    margin-bottom: 40px;
+}
+
+/* Seção Início/Apresentação */
+.apresentacao-box {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    background-color: var(--cor-branco);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.perfil-foto {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 5px solid var(--cor-principal);
+}
+
+/* Seção Produtos */
+#produtos {
+    padding-top: 80px; /* Aumenta o padding padrão de 60px para dar mais respiro */
+}
+
+#filtros {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.filtro-btn {
+    background: transparent;
+    color: var(--cor-texto);
+    border: 1px solid var(--cor-principal);
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-family: var(--fonte-corpo);
+    font-weight: 500;
+    cursor: pointer;
+    margin: 5px;
+    transition: all 0.3s ease;
+}
+
+.filtro-btn:hover {
+    background: var(--cor-principal);
+    color: var(--cor-branco);
+}
+
+.filtro-btn.active {
+    background: var(--cor-destaque);
+    color: var(--cor-branco);
+    border-color: var(--cor-destaque);
+}
+
+#grade-produtos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+}
+
+.produto-card {
+    background: var(--cor-branco);
+    border-radius: 8px; /* Menos arredondado */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.produto-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.produto-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.produto-info {
+    padding: 20px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.produto-info h3 {
+    font-family: var(--fonte-titulo);
+    color: var(--cor-destaque);
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+}
+
+.produto-info p {
+    flex-grow: 1;
+    margin-bottom: 20px;
+}
+
+.encomendar-btn {
+    background: var(--cor-destaque);
+    color: var(--cor-branco);
+    font-weight: 500;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease;
+}
+
+.encomendar-btn:hover {
+    background: var(--cor-destaque);
+    color: var(--cor-branco);
+}
+
+/* Seção Contato */
+#contato {
+    text-align: center;
+    background-color: var(--cor-principal);
+    padding-top: 80px; /* Aumenta o espaçamento interno */
+    padding-bottom: 80px;
+    margin-top: 40px; /* Adiciona espaço acima da seção */
+    border-top: 1px solid rgba(0,0,0,0.1); /* Linha sutil de separação */
+}
+
+.whatsapp-button {
+    display: inline-block;
+    background: #25D366;
+    color: white;
+    padding: 15px 30px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.2rem;
+    margin-top: 20px;
+    transition: transform 0.3s ease;
+}
+
+.whatsapp-button:hover {
+    transform: scale(1.05);
+}
+
+/* Botão Flutuante do WhatsApp (FAB) */
+.whatsapp-fab {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background-color: #25D366;
+    color: white;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    text-decoration: none;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    z-index: 100;
+}
+
+.whatsapp-fab:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+}
+
+.telefone {
+    display: inline-block;
+    background-color: rgba(255, 255, 255, 0.5);
+    padding: 12px 25px;
+    border-radius: 30px;
+    margin-top: 25px;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--cor-texto);
+    transition: all 0.3s ease;
+}
+
+.telefone i {
+    margin-right: 10px;
+    color: var(--cor-destaque);
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 20px;
+    background: var(--cor-texto);
+    color: var(--cor-branco);
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.6);
+}
+
+.modal-content {
+    background-color: var(--cor-branco);
+    margin: 15% auto;
+    padding: 30px;
+    border: 5px solid var(--cor-principal);
+    border-radius: 20px;
+    width: 90%;
+    max-width: 500px;
+    text-align: center;
+    position: relative;
+    animation: fadeIn 0.5s;
+}
+
+@keyframes fadeIn {
+    from {opacity: 0; transform: scale(0.9);}
+    to {opacity: 1; transform: scale(1);}
+}
+
+.close-button {
+    color: #aaa;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.produto-nome-modal {
+    font-family: var(--fonte-titulo);
+    color: var(--cor-destaque);
+    font-size: 2rem;
+    margin: 15px 0;
+}
+
+#confirmar-whatsapp-btn {
+    background-color: #25D366;
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-top: 20px;
+    transition: transform 0.3s ease;
+}
+#confirmar-whatsapp-btn:hover {
+    transform: scale(1.05);
+}
+
+/* Estilos para os novos elementos */
+.produto-rodape {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.produto-preco {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--cor-destaque);
+}
+
+.encomendar-btn {
+    width: auto; /* Ajuste para o botão não ocupar toda a largura */
+    padding: 10px 20px;
+}
+
+/* Estilos para o Carrinho de Compras */
+
+#carrinho-icone {
+    position: relative;
+    cursor: pointer;
+    margin-left: 20px;
+}
+
+#carrinho-icone i {
+    font-size: 2rem; /* Ícone maior */
+    color: var(--cor-texto);
+    transition: color 0.3s ease, transform 0.1s ease; /* Transição mais rápida para o clique */
+}
+
+/* Animação do Ícone do Carrinho ao Clicar */
+#carrinho-icone.pressed i {
+    transform: scale(0.9);
+    opacity: 0.7;
+}
+
+#carrinho-icone:hover i {
+    color: var(--cor-destaque);
+}
+
+#carrinho-contador {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: var(--cor-destaque);
+    color: var(--cor-branco);
+    font-size: 0.75rem;
+    font-weight: 700;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid var(--cor-principal);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    transform: translate(50%, -50%); /* Centraliza o contador na bolinha */
+}
+
+/* Animação para o contador */
+@keyframes pop {
+    0% { transform: scale(1) translate(50%, -50%); }
+    50% { transform: scale(1.4) translate(50%, -50%); }
+    100% { transform: scale(1) translate(50%, -50%); }
+}
+
+.carrinho-animar {
+    animation: pop 0.3s ease-in-out;
+}
+
+.add-carrinho-btn {
+    background: none;
+    border: none;
+    color: var(--cor-destaque);
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.add-carrinho-btn:hover {
+    transform: scale(1.2);
+    color: var(--cor-texto);
+}
+
+/* Modal do Carrinho Melhorado */
+.modal-content h3 {
+    font-family: var(--fonte-titulo);
+    color: var(--cor-destaque);
+    font-size: 2.2rem;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--cor-principal);
+    margin-bottom: 20px;
+}
+
+#carrinho-itens {
+    margin-top: 20px;
+    max-height: 320px;
+    overflow-y: auto;
+    padding-right: 10px; /* Espaço para a barra de rolagem */
+}
+
+.carrinho-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 5px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.carrinho-item:last-child {
+    border-bottom: none;
+}
+
+.carrinho-item-nome {
+    flex-grow: 1;
+    font-weight: 500;
+}
+
+.carrinho-item-preco {
+    font-weight: 600;
+    margin-left: 15px;
+    margin-right: 15px;
+    min-width: 80px; /* Alinha os preços */
+    text-align: right;
+}
+
+.remover-item-btn {
+    background: transparent;
+    border: none;
+    color: #ccc;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.remover-item-btn:hover {
+    color: #ff5555;
+    transform: scale(1.1);
+}
+
+#carrinho-total {
+    margin-top: 25px;
+    padding-top: 15px;
+    text-align: right;
+    font-size: 1.5rem;
+    font-weight: 700;
+    border-top: 2px solid var(--cor-destaque);
+}
+
+#finalizar-compra-btn {
+    background-color: #25D366;
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-top: 25px;
+    width: 100%;
+    transition: all 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+#finalizar-compra-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+
+/* Seção Redes Sociais */
+#redes-sociais {
+    background-color: var(--cor-principal);
+    padding: 40px 0;
+}
+
+.icones-sociais {
+    text-align: center;
+}
+
+.icones-sociais a {
+    color: var(--cor-destaque);
+    font-size: 2.5rem;
+    margin: 0 20px;
+    transition: color 0.3s ease;
+}
+
+.icones-sociais a:hover {
+    color: var(--cor-texto);
+}
+
+/* Botão WhatsApp com Ícone */
+.whatsapp-button i {
+    margin-right: 10px;
+}
+
+/* Footer Minimalista */
+footer {
+    text-align: center;
+    padding: 20px;
+    background: var(--cor-texto);
+    color: var(--cor-branco);
+    font-size: 0.9rem;
+}
+
+
+/* Seção Hero (Boas-Vindas) */
+.hero-section {
+    position: relative; /* Necessário para o overlay */
+    background-image: url('img/biscoito.jpg');
+    background-size: cover;
+    background-position: center center;
+    padding: 100px 0; /* Aumenta o padding para a imagem respirar */
+    text-align: center;
+    z-index: 1; /* Garante que a seção fique no fluxo correto */
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* Overlay preto com 50% de opacidade */
+    z-index: -1; /* Coloca o overlay atrás do conteúdo */
+}
+
+.hero-title {
+    font-size: 3.8rem;
+    color: var(--cor-branco); /* Texto branco para melhor contraste */
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.7); /* Sombra mais forte para legibilidade */
+}
+
+
+/* Responsividade */
+@media(max-width: 768px) {
+    header .container {
+        flex-direction: row; /* Mantém na mesma linha */
+        justify-content: space-between;
+        align-items: center;
+    }
+    header h1 {
+        font-size: 1.8rem; /* Diminui um pouco o título */
+        margin-bottom: 0;
+    }
+    .hero-title {
+        font-size: 2.8rem;
+    }
+}
+
+@media(max-width: 480px) {
+    header h1 {
+        font-size: 2.1rem; /* Tamanho máximo para não quebrar em 375px */
+        letter-spacing: 0.5px; /* Ajusta o espaçamento */
+    }
+    header nav {
+        display: none; /* Esconde a navegação principal em telas muito pequenas */
+    }
+    h2 {
+        font-size: 2.5rem;
+    }
+    .hero-title {
+        font-size: 2.2rem;
+    }
+    .produto-info h3 {
+        font-size: 1.6rem;
+    }
+    .icones-sociais a {
+        font-size: 2rem;
+        margin: 0 15px;
+    }
+}
+
+/* Estilos para o loader */
+#loader {
+    display: none; /* Escondido por padrão */
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border: 5px solid var(--cor-principal);
+    border-top: 5px solid var(--cor-destaque);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    z-index: 2000; /* Garante que fique acima de tudo */
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+body.loading #loader {
+    display: block;
+}
