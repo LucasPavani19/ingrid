@@ -4,12 +4,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const gradeProdutos = document.getElementById('grade-produtos');
     if (!gradeProdutos) {
         console.error("Erro Crítico: O contêiner de produtos '#grade-produtos' não foi encontrado. A aplicação não pode iniciar.");
-        return; // Interrompe a execução se o elemento principal não existir.
+        return; 
     }
 
     // --- DADOS DOS PRODUTOS ---
     const produtos = [
-        { id: 1, nome: "Bolo de Chocolate", descricao: "Um bolo de chocolate super fofinho com uma cobertura cremosa de brigadeiro.", preco: 75.00, caminhoImagem: "img/bolo-chocolate.webp", categoria: "bolos" },
+        { id: 1, nome: "Bolo de Chocolate", descricao: "Um bolo de chocolate super fofinho com uma cobertura cremosa de brigadeiro.", preco: 75.00, caminhoImagem: "img/bolo-chocolate.jpg", categoria: "bolos" },
         { id: 2, nome: "Torta de Limão", descricao: "Massa crocante com recheio de mousse de limão e cobertura de merengue suíço.", preco: 65.00, caminhoImagem: "img/torta-limao.webp", categoria: "tortas" },
         { id: 3, nome: "Brigadeiro Gourmet", descricao: "O clássico brigadeiro em sua melhor versão, feito com chocolate nobre.", preco: 4.00, caminhoImagem: "img/brigadeiro.webp", categoria: "doces" },
         { id: 4, nome: "Bolo de Cenoura", descricao: "Aquele bolo de cenoura com gostinho de casa de vó e muita cobertura de chocolate.", preco: 60.00, caminhoImagem: "img/bolo-cenoura.webp", categoria: "bolos" },
@@ -23,6 +23,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- ELEMENTOS DO DOM ---
     const botoesFiltro = document.querySelectorAll('.filtro-btn');
+    const pesquisaInput = document.getElementById('pesquisa-input');
+    const botoesOrdenacao = document.querySelectorAll('.ordenacao-btn'); // Novo seletor
     const carrinhoIcone = document.getElementById('carrinho-icone');
     const carrinhoContador = document.getElementById('carrinho-contador');
     const modalCarrinho = document.getElementById('modal-carrinho');
@@ -30,50 +32,75 @@ document.addEventListener('DOMContentLoaded', () => {
     const carrinhoItensContainer = document.getElementById('carrinho-itens');
     const carrinhoPrecoTotalEl = document.getElementById('carrinho-preco-total');
     const finalizarCompraBtn = document.getElementById('finalizar-compra-btn');
+    const toastContainer = document.getElementById('toast-container');
+    const carrinhoVazioMsg = document.getElementById('carrinho-vazio-mensagem');
 
     // --- FUNÇÕES ---
 
     /**
-     * Renderiza os produtos na grade e retorna uma Promise que resolve quando todas as imagens carregam.
+     * Mostra uma notificação (toast) na tela.
+     * @param {string} mensagem - A mensagem a ser exibida.
+     */
+    const mostrarToast = (mensagem) => {
+        const toast = document.createElement('div');
+        toast.classList.add('toast');
+        toast.textContent = mensagem;
+        toastContainer.appendChild(toast);
+
+        requestAnimationFrame(() => {
+            toast.classList.add('show');
+        });
+
+        setTimeout(() => {
+            toast.classList.remove('show');
+            toast.addEventListener('transitionend', () => toast.remove());
+        }, 3000);
+    };
+
+    /**
+     * Renderiza os produtos na grade.
      * @param {Array} listaProdutos - A lista de produtos a ser exibida.
-     * @returns {Promise<void>}
      */
     const mostrarProdutos = (listaProdutos) => {
         gradeProdutos.innerHTML = '';
-
         if (listaProdutos.length === 0) {
-            return Promise.resolve(); // Resolve imediatamente se não há produtos.
+            gradeProdutos.innerHTML = '<p class="nenhum-produto">Nenhum produto encontrado.</p>';
+            return;
         }
 
-        const promessasImagens = listaProdutos.map(produto => {
-            return new Promise((resolve) => {
-                const card = document.createElement('div');
-                card.classList.add('produto-card');
-                
-                const img = new Image();
-                img.src = produto.caminhoImagem;
-                img.alt = produto.nome;
-                
-                // Resolve a promessa quando a imagem carrega ou dá erro.
-                img.onload = resolve;
-                img.onerror = resolve;
-
-                card.innerHTML = `
-                    <div class="produto-info">
-                        <h3>${produto.nome}</h3>
-                        <p>${produto.descricao}</p>
-                        <div class="produto-rodape">
-                            <span class="produto-preco">R$ ${produto.preco.toFixed(2).replace('.', ',')}</span>
-                            <button class="add-carrinho-btn" data-id-produto="${produto.id}" title="Adicionar ao Carrinho"><i class="fas fa-cart-plus"></i></button>
-                        </div>
+        listaProdutos.forEach(produto => {
+            const card = document.createElement('div');
+            card.classList.add('produto-card');
+            card.innerHTML = `
+                <img src="${produto.caminhoImagem}" alt="${produto.nome}">
+                <div class="produto-info">
+                    <h3>${produto.nome}</h3>
+                    <p>${produto.descricao}</p>
+                    <div class="produto-rodape">
+                        <span class="produto-preco">R$ ${produto.preco.toFixed(2).replace('.', ',')}</span>
+                        <button class="add-carrinho-btn" data-id-produto="${produto.id}" title="Adicionar ao Carrinho"><i class="fas fa-cart-plus"></i></button>
                     </div>
-                `;
-                card.insertAdjacentElement('afterbegin', img);
-                gradeProdutos.appendChild(card);
-            });
+                </div>
+            `;
+            gradeProdutos.appendChild(card);
         });
+    };
 
-        return Promise.all(promessasImagens);
+    /**
+     * Salva o estado do carrinho no localStorage.
+     */
+    const salvarCarrinho = () => {
+        localStorage.setItem('carrinhoConfeitaria', JSON.stringify(carrinho));
+    };
+
+    /**
+     * Carrega o carrinho do localStorage ao iniciar a página.
+     */
+    const carregarCarrinho = () => {
+        const carrinhoSalvo = localStorage.getItem('carrinhoConfeitaria');
+        if (carrinhoSalvo) {
+            carrinho = JSON.parse(carrinhoSalvo);
+        }
     };
 
     const atualizarCarrinho = () => {
@@ -81,31 +108,46 @@ document.addEventListener('DOMContentLoaded', () => {
         let total = 0;
         let totalItens = 0;
 
-        carrinho.forEach(item => {
-            const itemEl = document.createElement('div');
-            itemEl.classList.add('carrinho-item');
-            itemEl.innerHTML = `
-                <span class="carrinho-item-nome">${item.nome} (x${item.quantidade})</span>
-                <span class="carrinho-item-preco">R$ ${(item.preco * item.quantidade).toFixed(2).replace('.', ',')}</span>
-                <button class="remover-item-btn" data-id-produto="${item.id}" title="Remover Item">&times;</button>
-            `;
-            carrinhoItensContainer.appendChild(itemEl);
-            total += item.preco * item.quantidade;
-            totalItens += item.quantidade;
-        });
+        if (carrinho.length === 0) {
+            carrinhoVazioMsg.style.display = 'block';
+            carrinhoItensContainer.style.display = 'none';
+            finalizarCompraBtn.style.display = 'none';
+            document.getElementById('carrinho-total').style.display = 'none';
+        } else {
+            carrinhoVazioMsg.style.display = 'none';
+            carrinhoItensContainer.style.display = 'block';
+            finalizarCompraBtn.style.display = 'flex';
+            document.getElementById('carrinho-total').style.display = 'block';
+
+            carrinho.forEach(item => {
+                const itemEl = document.createElement('div');
+                itemEl.classList.add('carrinho-item');
+                itemEl.innerHTML = `
+                    <span class="carrinho-item-nome">${item.nome} (x${item.quantidade})</span>
+                    <span class="carrinho-item-preco">R$ ${(item.preco * item.quantidade).toFixed(2).replace('.', ',')}</span>
+                    <button class="remover-item-btn" data-id-produto="${item.id}" title="Remover Item">&times;</button>
+                `;
+                carrinhoItensContainer.appendChild(itemEl);
+                total += item.preco * item.quantidade;
+                totalItens += item.quantidade;
+            });
+        }
 
         carrinhoPrecoTotalEl.textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
         carrinhoContador.textContent = totalItens;
         
         if (totalItens > 0) {
-            carrinhoContador.style.display = 'block';
-            carrinhoContador.classList.add('carrinho-animar');
-            setTimeout(() => {
-                carrinhoContador.classList.remove('carrinho-animar');
-            }, 300);
+            carrinhoContador.style.display = 'flex';
+            if (!document.querySelector('.carrinho-animar')) {
+                carrinhoContador.classList.add('carrinho-animar');
+                setTimeout(() => {
+                    carrinhoContador.classList.remove('carrinho-animar');
+                }, 300);
+            }
         } else {
             carrinhoContador.style.display = 'none';
         }
+        salvarCarrinho();
     };
 
     const adicionarAoCarrinho = (id) => {
@@ -118,6 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 carrinho.push({ ...produto, quantidade: 1 });
             }
         }
+        mostrarToast('Produto adicionado ao carrinho!');
         atualizarCarrinho();
     };
 
@@ -147,30 +190,63 @@ document.addEventListener('DOMContentLoaded', () => {
         return `https://wa.me/${numeroWhatsapp}?text=${encodeURIComponent(mensagem)}`;
     };
 
-    // --- EVENT LISTENERS (ouvintes de eventos) ---
+    const filtrarEExibirProdutos = () => {
+        const termoPesquisa = pesquisaInput.value.toLowerCase();
+        const filtroAtivo = document.querySelector('.filtro-btn.active').dataset.filter;
+        const tipoOrdenacao = document.querySelector('.ordenacao-btn.active').dataset.sort;
+
+        let produtosFiltrados = [...produtos]; // Usar uma cópia para não alterar a ordem original
+
+        // 1. Filtragem por categoria
+        if (filtroAtivo !== 'todos') {
+            produtosFiltrados = produtosFiltrados.filter(p => p.categoria === filtroAtivo);
+        }
+
+        // 2. Filtragem por pesquisa
+        if (termoPesquisa) {
+            produtosFiltrados = produtosFiltrados.filter(p => p.nome.toLowerCase().includes(termoPesquisa));
+        }
+
+        // 3. Ordenação
+        if (tipoOrdenacao === 'preco-asc') {
+            produtosFiltrados.sort((a, b) => a.preco - b.preco);
+        } else if (tipoOrdenacao === 'preco-desc') {
+            produtosFiltrados.sort((a, b) => b.preco - a.preco);
+        }
+        // Se for 'padrao', a ordem original (após filtros) é mantida
+
+        mostrarProdutos(produtosFiltrados);
+    };
+
+    // --- EVENT LISTENERS ---
 
     function setupEventListeners() {
+        // Listener para o toggle de ordenação em mobile
+        const ordenacaoContainer = document.getElementById('ordenacao-container');
+        const ordenacaoToggle = document.querySelector('.ordenacao-toggle');
+        if (ordenacaoToggle) {
+            ordenacaoToggle.addEventListener('click', () => {
+                ordenacaoContainer.classList.toggle('open');
+            });
+        }
+
         botoesFiltro.forEach(botao => {
             botao.addEventListener('click', () => {
-                if (botao.classList.contains('active')) {
-                    return; // Não faz nada se o filtro já estiver ativo.
-                }
-
-                document.body.classList.add('loading');
+                if (botao.classList.contains('active')) return;
                 botoesFiltro.forEach(btn => btn.classList.remove('active'));
                 botao.classList.add('active');
+                filtrarEExibirProdutos();
+            });
+        });
 
-                const filtro = botao.dataset.filter;
-                const produtosFiltrados = filtro === 'todos' ? produtos : produtos.filter(p => p.categoria === filtro);
+        pesquisaInput.addEventListener('input', filtrarEExibirProdutos);
 
-                // Garante que o loader seja exibido antes de carregar as imagens.
-                requestAnimationFrame(() => {
-                    setTimeout(() => {
-                        mostrarProdutos(produtosFiltrados).then(() => {
-                            document.body.classList.remove('loading');
-                        });
-                    }, 0);
-                });
+        botoesOrdenacao.forEach(botao => {
+            botao.addEventListener('click', () => {
+                if (botao.classList.contains('active')) return;
+                botoesOrdenacao.forEach(btn => btn.classList.remove('active'));
+                botao.classList.add('active');
+                filtrarEExibirProdutos();
             });
         });
 
@@ -194,7 +270,6 @@ document.addEventListener('DOMContentLoaded', () => {
             modalCarrinho.style.display = 'block';
         });
 
-        // Animação do ícone do carrinho ao ser pressionado
         carrinhoIcone.addEventListener('mousedown', () => {
             carrinhoIcone.classList.add('pressed');
         });
@@ -204,7 +279,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         carrinhoIcone.addEventListener('mouseleave', () => {
-            // Remove a classe se o mouse sair enquanto pressionado
             carrinhoIcone.classList.remove('pressed');
         });
 
@@ -229,13 +303,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- INICIALIZAÇÃO ---
     function init() {
+        carregarCarrinho();
         setupEventListeners();
         atualizarCarrinho();
-        // Carga inicial dos produtos (sem loader)
-        document.body.classList.add('loading');
-        mostrarProdutos(produtos).then(() => {
-            document.body.classList.remove('loading');
-        });
+        filtrarEExibirProdutos();
     }
 
     init();

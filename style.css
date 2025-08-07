@@ -124,10 +124,89 @@ h2 {
     padding-top: 80px; /* Aumenta o padding padrão de 60px para dar mais respiro */
 }
 
+/* Barra de Pesquisa */
+#pesquisa-container {
+    position: relative;
+    max-width: 400px;
+    margin: 0 auto 30px; /* Centraliza e adiciona espaço abaixo */
+}
+
+#pesquisa-input {
+    width: 100%;
+    padding: 12px 20px 12px 45px; /* Espaço para o ícone */
+    border: 1px solid var(--cor-principal);
+    border-radius: 25px;
+    font-size: 1rem;
+    font-family: var(--fonte-corpo);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#pesquisa-input:focus {
+    outline: none;
+    border-color: var(--cor-destaque);
+    box-shadow: 0 0 0 3px rgba(212, 163, 115, 0.2);
+}
+
+#pesquisa-container i {
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #aaa;
+}
+
+/* Filtros com mais espaço */
 #filtros {
     text-align: center;
-    margin-bottom: 40px;
+    margin-bottom: 20px; /* Reduz a margem para acomodar o seletor */
 }
+
+/* Container de Ordenação */
+#ordenacao-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.ordenacao-toggle {
+    margin-right: 10px;
+    font-weight: 500;
+}
+
+/* Esconde a seta na versão desktop */
+.ordenacao-toggle i {
+    display: none;
+}
+
+.ordenacao-botoes {
+    display: flex;
+}
+
+.ordenacao-btn {
+    background: transparent;
+    color: var(--cor-texto);
+    border: 1px solid var(--cor-principal);
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-family: var(--fonte-corpo);
+    font-weight: 500;
+    cursor: pointer;
+    margin-left: 5px;
+    transition: all 0.3s ease;
+}
+
+.ordenacao-btn:hover {
+    background: var(--cor-principal);
+    color: var(--cor-branco);
+}
+
+.ordenacao-btn.active {
+    background: var(--cor-destaque);
+    color: var(--cor-branco);
+    border-color: var(--cor-destaque);
+}
+
 
 .filtro-btn {
     background: transparent;
@@ -174,10 +253,20 @@ h2 {
     box-shadow: 0 8px 20px rgba(0,0,0,0.15);
 }
 
+.nenhum-produto {
+    grid-column: 1 / -1; /* Ocupa toda a largura da grade */
+    text-align: center;
+    padding: 40px;
+    font-size: 1.2rem;
+    color: #888;
+}
+
 .produto-card img {
     width: 100%;
     height: 200px;
     object-fit: cover;
+    /* Adiciona uma cor de fundo para o caso da imagem demorar a carregar */
+    background-color: #f0f0f0;
 }
 
 .produto-info {
@@ -444,6 +533,47 @@ footer {
     color: var(--cor-texto);
 }
 
+/* Container para as notificações (toasts) */
+#toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.toast {
+    background-color: #333;
+    color: #fff;
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Mensagem de Carrinho Vazio */
+#carrinho-vazio-mensagem {
+    text-align: center;
+    padding: 40px 20px;
+    color: #888;
+}
+
+#carrinho-vazio-mensagem p:first-child {
+    font-size: 1.2rem;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
 /* Modal do Carrinho Melhorado */
 .modal-content h3 {
     font-family: var(--fonte-titulo);
@@ -555,6 +685,14 @@ footer {
     color: var(--cor-texto);
 }
 
+.instagram-handle {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--cor-texto);
+}
+
 /* Botão WhatsApp com Ícone */
 .whatsapp-button i {
     margin-right: 10px;
@@ -612,6 +750,53 @@ footer {
     }
     .hero-title {
         font-size: 2.8rem;
+    }
+
+    /* Otimização da Ordenação para Mobile */
+    #ordenacao-container {
+        flex-direction: column; 
+        align-items: center; 
+        position: relative; 
+        overflow: hidden; 
+    }
+
+    .ordenacao-toggle {
+        cursor: pointer;
+        padding: 10px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        margin-right: 0; /* Reseta a margem do desktop */
+    }
+
+    /* Mostra a seta apenas no mobile */
+    .ordenacao-toggle i {
+        display: inline-block; /* Garante que a seta seja visível */
+        margin-left: 8px;
+        transition: transform 0.3s ease;
+    }
+
+    #ordenacao-container.open .ordenacao-toggle i {
+        transform: rotate(180deg);
+    }
+
+    .ordenacao-botoes {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        max-height: 0; 
+        transition: max-height 0.4s ease-out; 
+    }
+
+    #ordenacao-container.open .ordenacao-botoes {
+        max-height: 150px; 
+        padding-top: 10px;
+    }
+
+    .ordenacao-btn {
+        margin: 5px; 
     }
 }
 

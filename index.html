@@ -33,14 +33,26 @@
 
         <section id="produtos" class="container">
             <h2>Nossos Produtos</h2>
+            <div id="pesquisa-container">
+                <i class="fas fa-search"></i>
+                <input type="search" id="pesquisa-input" placeholder="Buscar pelo nome...">
+            </div>
             <div id="filtros">
                 <button class="filtro-btn active" data-filter="todos">Todos</button>
                 <button class="filtro-btn" data-filter="bolos">Bolos</button>
                 <button class="filtro-btn" data-filter="doces">Docinhos</button>
                 <button class="filtro-btn" data-filter="tortas">Tortas</button>
             </div>
-            <div id="grade-produtos">
+            <div id="ordenacao-container">
+                <span class="ordenacao-toggle">Ordenar por: <i class="fas fa-chevron-down"></i></span>
+                <div class="ordenacao-botoes">
+                    <button class="ordenacao-btn active" data-sort="padrao">Padrão</button>
+                    <button class="ordenacao-btn" data-sort="preco-asc">Menor Preço</button>
+                    <button class="ordenacao-btn" data-sort="preco-desc">Maior Preço</button>
                 </div>
+            </div>
+            <div id="grade-produtos">
+            </div>
         </section>
 
         <section id="contato" class="container">
@@ -55,9 +67,10 @@
         <section id="redes-sociais" class="container">
             <h2>Siga-me</h2>
             <div class="icones-sociais">
-                 <a href="#" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+                 <a href="https://www.instagram.com/confeitariaingrid1/" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
                  <a href="#" target="_blank" title="TikTok"><i class="fab fa-tiktok"></i></a>
             </div>
+            <p class="instagram-handle">@confeitariaingrid1</p>
         </section>
     </main>
 
@@ -68,6 +81,8 @@
     <footer>
         <p>&copy; 2025 Confeitaria da Ingrid. Todos os direitos reservados.</p>
     </footer>
+
+    <div id="toast-container"></div>
 
     <div id="loader"></div>
 
@@ -86,6 +101,10 @@
         <div class="modal-content">
             <span class="close-button-carrinho">&times;</span>
             <h3>Meu Carrinho</h3>
+            <div id="carrinho-vazio-mensagem" style="display: none;">
+                <p>Seu carrinho está vazio!</p>
+                <p>Adicione produtos para vê-los aqui.</p>
+            </div>
             <div id="carrinho-itens"></div>
             <div id="carrinho-total">
                 <strong>Total:</strong> <span id="carrinho-preco-total">R$ 0,00</span>
